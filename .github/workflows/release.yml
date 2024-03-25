@@ -1,0 +1,107 @@
+name: main
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  version:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Determine stable version
+        id: stable-version
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          if ! [[ "${{ github.event.release.tag_name }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z].*)?$ ]]; then
+              echo "Invalid version: ${{ github.event.release.tag_name }}"
+              exit 1
+          fi
+          
+          echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+
+      - name: Determine prerelease version
+        id: pre-version
+        if: ${{ github.event_name != 'release' }}
+        run: |
+          hash="${{ github.event.pull_request.head.sha || github.sha }}"
+          echo "version=0.0.0-ci-${hash:0:7}" >> $GITHUB_OUTPUT
+
+    outputs:
+      version: ${{ steps.stable-version.outputs.version || steps.pre-version.outputs.version }}
+
+  pack:
+    needs: version
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+
+      - name: Run restore
+        run: dotnet restore
+
+      - name: Run build
+        run: >
+          dotnet build
+          --no-restore
+          --configuration Release
+          -p:ContinuousIntegrationBuild=true
+
+      - name: Run pack
+        run: >
+          dotnet pack
+          -p:Version=${{ needs.version.outputs.version }}
+          -p:ContinuousIntegrationBuild=true
+          --no-restore
+          --no-build
+          --configuration Release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
+        with:
+          name: packages
+          path: "**/*.nupkg"
+
+  deploy:
+    needs:
+      - pack
+
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      packages: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 # v4.1.1
+        with:
+          name: packages
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+
+      # Publish to GitHub package registry every time, whether it's a prerelease
+      # version or a stable release version.
+      - name: Publish packages (GitHub Registry)
+        run: >
+          dotnet nuget push **/*.nupkg
+          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+          --api-key ${{ secrets.GITHUB_TOKEN }}
+
+      # Only publish to NuGet on stable releases
+      - name: Publish packages (NuGet Registry)
+        if: ${{ github.event_name == 'release' }}
+        run: >
+          dotnet nuget push **/*.nupkg
+          --source https://api.nuget.org/v3/index.json
+          --api-key ${{ secrets.NUGET_API_KEY }}
