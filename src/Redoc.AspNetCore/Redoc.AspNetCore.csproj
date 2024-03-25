@@ -3,6 +3,13 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
+        <Title>Redoc for ASP.NET</Title>
+        <Authors>Jonas Hendrickx</Authors>
+        <PackageProjectUrl>https://github.com/jonashendrickx/Redoc.AspNetCore</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/jonashendrickx/Redoc.AspNetCore/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/jonashendrickx/Redoc.AspNetCore</RepositoryUrl>
+        <PackageTags>openapi, redoc</PackageTags>
+        <Company>Jonas Hendrickx</Company>
     </PropertyGroup>
 
     <ItemGroup>
