@@ -90,15 +90,12 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
 
-      # Publish to GitHub package registry every time, whether it's a prerelease
-      # version or a stable release version.
       - name: Publish packages (GitHub Registry)
         run: >
           dotnet nuget push **/*.nupkg
           --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
           --api-key ${{ secrets.GITHUB_TOKEN }}
 
-      # Only publish to NuGet on stable releases
       - name: Publish packages (NuGet Registry)
         if: ${{ github.event_name == 'release' }}
         run: >
