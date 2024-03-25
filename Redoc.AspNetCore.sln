@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redoc.AspNetCore", "src\Redoc.AspNetCore\Redoc.AspNetCore.csproj", "{F8D66E7B-972D-4EBD-B0BA-56BC04FE4BA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redoc.AspNetCore.Example", "examples\Redoc.AspNetCore.Example\Redoc.AspNetCore.Example.csproj", "{11398CEA-B985-465A-8AB0-FBF235509116}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8D66E7B-972D-4EBD-B0BA-56BC04FE4BA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8D66E7B-972D-4EBD-B0BA-56BC04FE4BA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8D66E7B-972D-4EBD-B0BA-56BC04FE4BA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8D66E7B-972D-4EBD-B0BA-56BC04FE4BA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11398CEA-B985-465A-8AB0-FBF235509116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11398CEA-B985-465A-8AB0-FBF235509116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11398CEA-B985-465A-8AB0-FBF235509116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11398CEA-B985-465A-8AB0-FBF235509116}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
