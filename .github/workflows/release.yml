@@ -7,7 +7,7 @@ on:
 
 jobs:
   version:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       contents: read
 
@@ -35,7 +35,7 @@ jobs:
 
   pack:
     needs: version
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       actions: write
       contents: read
